@@ -1,22 +1,26 @@
 public class Casa extends Financiamento {
+
     private double tamanhoAreaConstruida;
     private double tamanhoTerreno;
+
+    //inicia os métodos
     public Casa(double valorImovel, int prazoFinanciamento, double taxaJurosAnual, double tamanhoAreaConstruida, double tamanhoTerreno) {
         super(valorImovel, prazoFinanciamento, taxaJurosAnual);
         this.tamanhoAreaConstruida = tamanhoAreaConstruida;
         this.tamanhoTerreno = tamanhoTerreno;
+    }
 
-
-
-}
-
-    @Override
-    public double calcularPagamentoMensal() {
-        // Calcular pagamento mensal com a fórmula padrão de Financiamento
+    public double calcularPagamentoMensal(double desconto) throws DescontoMaiorDoQueJurosException {
         double pagamentoMensal = super.calcularPagamentoMensal();
-
-        // Adicionar taxa adicional de R$ 80
         pagamentoMensal += 80.0;
+
+        double jurosMensais = super.calcularPagamentoMensal() - super.getValorImovel();
+
+        if (desconto > jurosMensais) {
+            throw new DescontoMaiorDoQueJurosException("O desconto não pode ser maior do que o valor dos juros.");
+        }
+
+        pagamentoMensal -= desconto;
 
         return pagamentoMensal;
     }
